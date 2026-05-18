@@ -15,11 +15,11 @@
 
 <style>
 	.dashboard {
-		--rail-bg: #15171b;
+		--rail-bg: #000000;
 		--rail-bg-2: #1c2027;
-		--rail-line: #2a2e36;
+		--rail-line: #212328;
 		--rail-label: #8a8f99;
-		--keycap-color: #f5f1e8;
+		--keycap-color: white;
 		--keycap-border: #0e0f12;
 		min-height: 100vh;
 	}

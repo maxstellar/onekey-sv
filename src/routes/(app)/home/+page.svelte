@@ -19,9 +19,9 @@
 	const dateLabel = `${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()}`;
 
 	const quests = [
-		{ label: '[complete hardware prototype]', pct: 40 },
-		{ label: '[submit firmware pull request]', pct: 0 },
-		{ label: '[document assembly process]', pct: 75 }
+		{ label: '[among us]', pct: 40 },
+		{ label: '[sussy baka]', pct: 0 },
+		{ label: '[hello its me crewmate i am the good guy on the spaceship]', pct: 75 }
 	];
 </script>
 
@@ -89,8 +89,9 @@
 	}
 
 	.card {
-		background: var(--color-bg-soft);
+		background: var(--color-bg);
 		border-radius: var(--radius-card);
+		border: solid var(--border-width);
 		padding: clamp(1rem, 1.5vw, 1.75rem) clamp(1.1rem, 1.5vw, 1.75rem);
 		min-height: clamp(8rem, 12vh, 16rem);
 		box-sizing: border-box;
