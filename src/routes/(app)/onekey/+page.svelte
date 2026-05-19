@@ -1,5 +1,5 @@
 <svelte:head>
-	<title>onekey - onekey</title>
+	<title>onekey - macropad</title>
 </svelte:head>
 
 <h1>onekey</h1>

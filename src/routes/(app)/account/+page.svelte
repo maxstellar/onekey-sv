@@ -1,5 +1,5 @@
 <svelte:head>
-	<title>onekey - profile</title>
+	<title>onekey - account</title>
 </svelte:head>
 
 <p class="eyebrow">account</p>

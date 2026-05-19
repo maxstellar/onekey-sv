@@ -79,7 +79,7 @@
 
 	<div class="bottom">
 		<div class="divider"></div>
-		<a href="/profile" class="avatar" aria-label="profile" draggable="false"></a>
+		<a href="/account" class="avatar" aria-label="account" draggable="false"></a>
 	</div>
 </aside>
 
