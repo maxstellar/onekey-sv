@@ -25,6 +25,7 @@
 	type Props = {
 		size?: number | string;
 		pressed?: boolean;
+		dark?: boolean;
 		color?: string;
 		border?: string;
 		children?: Snippet;
@@ -33,6 +34,7 @@
 	let {
 		size = 62,
 		pressed = false,
+		dark = false,
 		color = 'var(--keycap-color, white)',
 		border = 'var(--keycap-border, #0e0f12)',
 		children
@@ -44,6 +46,7 @@
 <div
 	class="keycap"
 	class:pressed
+	class:dark
 	style="--size: {sizeCss}; --color: {color}; --border: {border};"
 >
 	<div class="face">
@@ -57,41 +60,50 @@
 		width: var(--size);
 		height: var(--size);
 		box-sizing: border-box;
-		padding: calc(var(--size) * 0.065);
-		border-radius: calc(var(--size) * 0.145);
-		border: 1.5px solid var(--border);
-		background: linear-gradient(
-			to bottom,
-			color-mix(in srgb, var(--color) 92%, white) 0%,
-			var(--color) 70%,
-			color-mix(in srgb, var(--color) 85%, black) 100%
+		padding: calc(var(--size) * 0.13) calc(var(--size) * 0.10);
+		border-radius: calc(var(--size) * 0.07);
+		border: 2px solid var(--border);
+		background: conic-gradient(
+			from 315deg at 50% 50%,
+			color-mix(in srgb, var(--color) 91%, white) 0deg 90deg,
+			color-mix(in srgb, var(--color) 85%, black) 90deg 180deg,
+			color-mix(in srgb, var(--color) 72%, black) 180deg 270deg,
+			color-mix(in srgb, var(--color) 85%, black) 270deg 360deg
 		);
-		box-shadow:
-			0 calc(var(--size) * 0.12) 0 var(--border),
-			0 calc(var(--size) * 0.16) calc(var(--size) * 0.2) rgba(0, 0, 0, 0.35);
 		transition:
-			transform 160ms ease-in,
-			box-shadow 160ms ease-in;
+			transform 120ms ease-in,
+			box-shadow 120ms ease-in;
 		will-change: transform;
 	}
 
+	.keycap.dark {
+		background: conic-gradient(
+			from 315deg at 50% 50%,
+			color-mix(in srgb, var(--color) 80%, white) 0deg 90deg,
+			color-mix(in srgb, var(--color) 94%, white) 90deg 180deg,
+			color-mix(in srgb, var(--color) 55%, black) 180deg 270deg,
+			color-mix(in srgb, var(--color) 94%, white) 270deg 360deg
+		);
+		box-shadow: none;
+	}
+
 	.face {
-		width: 100%;
+		width: calc(100% - calc(var(--size) * 0.06));
 		height: 100%;
-		border-radius: calc(var(--size) * 0.1);
-		border: 1px solid color-mix(in srgb, var(--border) 25%, transparent);
+		margin: 0 auto;
+		border-radius: calc(var(--size) * 0.09);
+		border: 1px solid color-mix(in srgb, var(--border) 18%, transparent);
 		background: var(--color);
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		box-sizing: border-box;
+		box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.07);
 	}
 
-.keycap:not(.pressed):active,
+	.keycap:not(.pressed):active,
 	.keycap.pressed {
-		transform: translateY(calc(var(--size) * 0.12));
-		box-shadow:
-			0 0 0 var(--border),
-			0 calc(var(--size) * 0.03) calc(var(--size) * 0.08) rgba(0, 0, 0, 0.22);
+		transform: scale(0.93);
+		box-shadow: none;
 	}
 </style>

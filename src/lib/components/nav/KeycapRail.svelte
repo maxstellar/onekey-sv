@@ -26,8 +26,15 @@
 		return page.url.pathname === href || page.url.pathname.startsWith(href + '/');
 	}
 
-	function playKeySound() {
+	let pressedHref = $state<string | null>(null);
+
+	function handlePress(href: string) {
+		pressedHref = href;
 		new Audio('/audio/key.wav').play().catch(() => {});
+	}
+
+	function handleRelease() {
+		pressedHref = null;
 	}
 </script>
 
@@ -51,11 +58,17 @@
 				class:active
 				aria-current={active ? 'page' : undefined}
 				draggable="false"
-				onclick={playKeySound}
+				onmousedown={() => handlePress(item.href)}
+				onmouseup={handleRelease}
+				onmouseleave={handleRelease}
+				ontouchstart={() => handlePress(item.href)}
+				ontouchend={handleRelease}
 			>
 				<Keycap
 					size="clamp(55px, 5vw, 82px)"
 					color={active ? 'var(--keycap-border)' : 'var(--keycap-color)'}
+					dark={active}
+					pressed={pressedHref === item.href}
 				>
 					<span class="svg-icon" class:white={active}>{@html item.svg}</span>
 				</Keycap>
@@ -66,7 +79,7 @@
 
 	<div class="bottom">
 		<div class="divider"></div>
-		<div class="avatar" aria-label="user avatar"></div>
+		<a href="/profile" class="avatar" aria-label="profile" draggable="false"></a>
 	</div>
 </aside>
 
