@@ -384,7 +384,7 @@
 	}
 
 	.goals-callout-label {
-		font-size: clamp(0.7rem, 0.8vw, 0.9rem);
+		font-size: clamp(0.8rem, 0.95vw, 1.05rem);
 		font-weight: bold;
 		text-transform: uppercase;
 		letter-spacing: 0.08em;
@@ -392,7 +392,7 @@
 	}
 
 	.goals-callout-value {
-		font-size: clamp(1.1rem, 1.6vw, 1.8rem);
+		font-size: clamp(1.3rem, 1.9vw, 2.1rem);
 		font-weight: bold;
 		letter-spacing: -0.02em;
 	}
@@ -429,34 +429,35 @@
 	.card-started {
 		display: flex;
 		flex-direction: column;
-		justify-content: center;
 	}
 
 	.started-title {
 		font-size: clamp(1.05rem, 1.3vw, 1.55rem);
 		font-weight: bold;
 		text-transform: uppercase;
-		letter-spacing: 0.12em;
+		letter-spacing: 0.1em;
 		color: var(--color-text-soft);
 	}
 
 	.started-list {
 		list-style: none;
-		margin: 0;
+		margin-top: 0.91rem;
+		margin-bottom: 0;
 		padding: 0;
 		display: flex;
 		flex-direction: column;
-		gap: 0.75rem;
-		margin-top: 0.75rem;
+		justify-content: center;
+		gap: 1rem;
+		flex: 1;
 	}
 
 	.started-item {
 		display: flex;
 		align-items: center;
-		gap: 0.7rem;
+		gap: 0.8rem;
 		font-size: clamp(1.2rem, 1.8vw, 2.2rem);
 		font-weight: 500;
-		color: var(--rail-label);
+		color: var(--color-text);
 	}
 
 	.started-item > span:nth-child(2) {
@@ -464,7 +465,7 @@
 	}
 
 	.started-item.done {
-		color: var(--color-text);
+		color: var(--rail-label);
 		text-decoration: line-through;
 	}
 
@@ -478,7 +479,7 @@
 
 	span.started-action {
 		text-decoration: none;
-		color: var(--color-text-soft);
+		color: var(--rail-label);
 	}
 
 	.started-check {
@@ -491,14 +492,15 @@
 	}
 
 	.started-item.done .started-check {
-		background: currentColor;
+		background: var(--rail-label);
+		border-color: var(--rail-label);
 	}
 
 	.card-label-hours {
 		display: block;
 		font-size: clamp(0.95rem, 1.1vw, 1.3rem);
 		text-transform: uppercase;
-		letter-spacing: 0.08em;
+		letter-spacing: 0.07em;
 		color: var(--color-text-soft);
 		margin-bottom: 1.25rem;
 		font-weight: bold;
