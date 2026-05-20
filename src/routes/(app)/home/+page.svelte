@@ -18,6 +18,7 @@
 	const now = new Date();
 	const dateLabel = `${days[now.getDay()]}, ${months[now.getMonth()]} ${now.getDate()}`;
 
+	const personalHours = 47.6;
 	const communityGoalHours = 2000;
 	let communityHours = $state(670);
 	const communityProgress = $derived((communityHours / communityGoalHours) * 100);
@@ -56,9 +57,37 @@
 <h1 class="greeting">welcome back, [name]</h1>
 
 <div class="bento">
+	<div class="card card-started">
+		<span class="started-title">get started</span>
+		<ul class="started-list">
+			<li class="started-item done">
+				<span class="started-check"></span>
+				<span>join onekey</span>
+				<span class="started-action">joined!</span>
+			</li>
+			<li class="started-item">
+				<span class="started-check"></span>
+				<span>create a project</span>
+				<a href="/projects" class="started-action">go</a>
+			</li>
+			<li class="started-item">
+				<span class="started-check"></span>
+				<span>fortnite</span>
+				<a href="/fortnite" class="started-action">go</a>
+			</li>
+			<li class="started-item">
+				<span class="started-check"></span>
+				<span>skibidi</span>
+				<a href="/skibidi" class="started-action">go</a>
+			</li>
+		</ul>
+	</div>
+	<div class="card">
+		<span class="card-label">[section]</span>
+	</div>
 	<div class="card card-hero">
 		<img class="hero-bg" src="/img/frame1.png" alt="" aria-hidden="true" />
-		<span class="card-hero-label">configure your onekey!</span>
+		<span class="card-hero-label">configure your onekey</span>
 		<a href="/onekey" class="hero-btn">
 			go
 			<svg
@@ -78,13 +107,6 @@
 				/></svg
 			>
 		</a>
-	</div>
-
-	<div class="card">
-		<span class="card-label">[section]</span>
-	</div>
-	<div class="card">
-		<span class="card-label">[section]</span>
 	</div>
 
 	<div class="card card-full goals-card">
@@ -110,7 +132,7 @@
 			{/if}
 		</div>
 		<div class="goals-milestones-section">
-			<span class="card-label">{communityHours} / {communityGoalHours} hours</span>
+			<span class="card-label-hours">{communityHours} / {communityGoalHours} hours</span>
 			<ul class="milestone-list">
 				{#each goals as g (g.pct)}
 					<li class="milestone-row" class:reached={g.pct <= communityProgress}>
@@ -142,7 +164,7 @@
 
 <style>
 	.eyebrow {
-		font-size: 1.05rem;
+		font-size: 1.2rem;
 		font-weight: 500;
 		color: var(--rail-label);
 		margin: 0 0;
@@ -153,7 +175,7 @@
 		font-weight: bold;
 		letter-spacing: -0.03em;
 		line-height: 1;
-		margin: 0 0 2.5rem;
+		margin: 0 0 1.25rem;
 	}
 
 	.bento {
@@ -240,6 +262,31 @@
 		transform: translateX(0.1em);
 	}
 
+	.card-hours {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+
+	.hours-label {
+		font-size: clamp(1.5rem, 3vw, 4rem);
+		font-weight: bold;
+		letter-spacing: -0.03em;
+		line-height: 1;
+	}
+
+	.hours-value {
+		font-size: clamp(4rem, 9vw, 10rem);
+		font-weight: 500;
+		letter-spacing: -0.04em;
+		line-height: 0.9;
+	}
+
+	.hours-unit {
+		margin-left: 0.05em;
+		font-size: 0.85em;
+	}
+
 	.goals-card {
 		display: flex;
 		flex-direction: row;
@@ -309,7 +356,7 @@
 		font-size: 0.75rem;
 		font-weight: bold;
 		text-transform: uppercase;
-		letter-spacing: 0.08em;
+		letter-spacing: 0.07em;
 	}
 
 	.milestone-hours {
@@ -340,7 +387,7 @@
 		font-size: clamp(0.7rem, 0.8vw, 0.9rem);
 		font-weight: bold;
 		text-transform: uppercase;
-		letter-spacing: 0.14em;
+		letter-spacing: 0.08em;
 		color: var(--color-text-soft);
 	}
 
@@ -379,11 +426,79 @@
 		margin: 0;
 	}
 
-	.card-label {
-		display: block;
-		font-size: clamp(0.8rem, 0.9vw, 1.1rem);
+	.card-started {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
+
+	.started-title {
+		font-size: clamp(1.05rem, 1.3vw, 1.55rem);
+		font-weight: bold;
 		text-transform: uppercase;
-		letter-spacing: 0.14em;
+		letter-spacing: 0.12em;
+		color: var(--color-text-soft);
+	}
+
+	.started-list {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+		margin-top: 0.75rem;
+	}
+
+	.started-item {
+		display: flex;
+		align-items: center;
+		gap: 0.7rem;
+		font-size: clamp(1.2rem, 1.8vw, 2.2rem);
+		font-weight: 500;
+		color: var(--rail-label);
+	}
+
+	.started-item > span:nth-child(2) {
+		flex: 1;
+	}
+
+	.started-item.done {
+		color: var(--color-text);
+		text-decoration: line-through;
+	}
+
+	.started-action {
+		font-size: 0.7em;
+		font-weight: bold;
+		text-transform: uppercase;
+		letter-spacing: 0.1em;
+		flex-shrink: 0;
+	}
+
+	span.started-action {
+		text-decoration: none;
+		color: var(--color-text-soft);
+	}
+
+	.started-check {
+		width: 0.85rem;
+		height: 0.85rem;
+		border-radius: 5px;
+		border: 0.08em solid currentColor;
+		flex-shrink: 0;
+		transform: translateY(0.1em);
+	}
+
+	.started-item.done .started-check {
+		background: currentColor;
+	}
+
+	.card-label-hours {
+		display: block;
+		font-size: clamp(0.95rem, 1.1vw, 1.3rem);
+		text-transform: uppercase;
+		letter-spacing: 0.08em;
 		color: var(--color-text-soft);
 		margin-bottom: 1.25rem;
 		font-weight: bold;

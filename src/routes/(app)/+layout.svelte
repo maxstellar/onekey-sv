@@ -40,8 +40,5 @@
 		margin: 0;
 	}
 
-	.content :global(h1) {
-		font-size: 2rem;
-	}
 
 </style>
