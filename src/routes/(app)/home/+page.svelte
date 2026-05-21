@@ -77,10 +77,14 @@
 					<a href="/account" class="started-action">go</a>
 				{/if}
 			</li>
-			<li class="started-item">
+			<li class="started-item" class:done={data.hasProject}>
 				<span class="started-check"></span>
 				<span>create a project</span>
-				<a href="/projects" class="started-action">go</a>
+				{#if data.hasProject}
+					<span class="started-action">done!</span>
+				{:else}
+					<a href="/projects" class="started-action">go</a>
+				{/if}
 			</li>
 		</ul>
 	</div>
