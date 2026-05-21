@@ -73,6 +73,11 @@
 						<dt>slack display name</dt><dd>{user.slackDisplayName ?? '—'}</dd>
 						<dt>verification status</dt><dd>{user.verificationStatus ?? '—'}</dd>
 						<dt>ysws eligible</dt><dd>{bool(user.yswsEligible)}</dd>
+						<dt>street</dt><dd>{user.streetAddress ?? '—'}</dd>
+						<dt>city</dt><dd>{user.locality ?? '—'}</dd>
+						<dt>region</dt><dd>{user.region ?? '—'}</dd>
+						<dt>postal</dt><dd>{user.postalCode ?? '—'}</dd>
+						<dt>country</dt><dd>{user.country ?? '—'}</dd>
 						<dt>joined</dt><dd>{fmt(user.createdAt)}</dd>
 						<dt>last login</dt><dd>{fmt(user.updatedAt)}</dd>
 					</dl>
@@ -124,19 +129,19 @@
 		padding: 0.5rem 0.85rem;
 		font-family: 'Phantom Sans', sans-serif;
 		font-size: 0.85rem;
-		background: #0d0f12;
-		color: #fff;
+		background: #fff;
+		color: #000;
 		border: 1px solid #2a2f38;
 		border-radius: 8px;
 		outline: none;
 	}
 
 	.search:focus {
-		border-color: #3a3f48;
+		border-color: #555b66;
 	}
 
 	.search::placeholder {
-		color: #555b66;
+		color: #aaa;
 	}
 
 	.list {

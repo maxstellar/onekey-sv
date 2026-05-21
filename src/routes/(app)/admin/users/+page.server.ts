@@ -16,6 +16,11 @@ export async function load() {
 			slackDisplayName: users.slackDisplayName,
 			verificationStatus: users.verificationStatus,
 			yswsEligible: users.yswsEligible,
+			streetAddress: users.streetAddress,
+			locality: users.locality,
+			region: users.region,
+			postalCode: users.postalCode,
+			country: users.country,
 			createdAt: users.createdAt,
 			updatedAt: users.updatedAt
 		})

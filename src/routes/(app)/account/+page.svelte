@@ -67,13 +67,13 @@
 
 	<div class="card">
 		<span class="card-label">settings</span>
-		<form
-			method="POST"
-			action="?/saveSfx"
-			bind:this={sfxForm}
-			use:enhance
-		>
-			<input type="hidden" name="key_sfx_enabled" bind:this={sfxInput} value={sfxEnabled ? 'true' : 'false'} />
+		<form method="POST" action="?/saveSfx" bind:this={sfxForm} use:enhance>
+			<input
+				type="hidden"
+				name="key_sfx_enabled"
+				bind:this={sfxInput}
+				value={sfxEnabled ? 'true' : 'false'}
+			/>
 			<label class="toggle-row">
 				<span class="toggle-label">sidebar key sfx</span>
 				<button
@@ -122,7 +122,7 @@
 							type="text"
 							name="street_address"
 							value={data.user?.street_address ?? ''}
-							placeholder="123 Main St"
+							placeholder="212 Battery St"
 						/>
 					</label>
 					<label class="edit-field">
@@ -132,7 +132,7 @@
 							type="text"
 							name="locality"
 							value={data.user?.locality ?? ''}
-							placeholder="Springfield"
+							placeholder="Burlington"
 						/>
 					</label>
 					<label class="edit-field">
@@ -142,7 +142,7 @@
 							type="text"
 							name="region"
 							value={data.user?.region ?? ''}
-							placeholder="CA"
+							placeholder="VT"
 						/>
 					</label>
 					<label class="edit-field">
@@ -152,7 +152,7 @@
 							type="text"
 							name="postal_code"
 							value={data.user?.postal_code ?? ''}
-							placeholder="90210"
+							placeholder="05401"
 						/>
 					</label>
 					<label class="edit-field">
@@ -162,13 +162,15 @@
 							type="text"
 							name="country"
 							value={data.user?.country ?? ''}
-							placeholder="US"
+							placeholder="United States"
 						/>
 					</label>
 				</div>
 				<div class="edit-actions">
 					<button type="submit" class="btn-save">save</button>
-					<button type="button" class="btn-cancel" onclick={() => (editingAddress = false)}>cancel</button>
+					<button type="button" class="btn-cancel" onclick={() => (editingAddress = false)}
+						>cancel</button
+					>
 				</div>
 			</form>
 		{:else if hasAddress}
@@ -323,7 +325,7 @@
 	.logout-link {
 		display: inline-block;
 		margin-top: 1.5rem;
-		font-size: 0.7rem;
+		font-size: 0.85rem;
 		font-weight: bold;
 		text-transform: uppercase;
 		letter-spacing: 0.1em;
@@ -417,15 +419,14 @@
 		font-size: 0.85rem;
 		color: var(--rail-label);
 		margin: 0;
-		margin-top: 0.25rem;
 	}
 
 	.field-list {
-		margin-top: 0.25rem;
+		margin-top: 0;
 	}
 
 	.edit-form {
-		margin-top: 0.25rem;
+		margin-top: 1.25rem;
 	}
 
 	.edit-grid {
@@ -454,7 +455,7 @@
 
 	.edit-input {
 		background: transparent;
-		border: solid var(--border-width);
+		border: solid calc(var(--border-width) / 2);
 		border-radius: calc(var(--radius-card) / 2);
 		padding: 0.45rem 0.65rem;
 		font-size: 0.9rem;
@@ -477,12 +478,10 @@
 
 	.btn-save,
 	.btn-cancel {
-		font-size: 0.7rem;
+		font-size: 0.85rem;
 		font-weight: bold;
-		text-transform: uppercase;
-		letter-spacing: 0.1em;
 		border-radius: var(--radius-pill);
-		padding: 0.45rem 1rem;
+		padding: 0.45rem 0.9rem;
 		cursor: pointer;
 		border: solid var(--border-width);
 		font-family: inherit;
@@ -495,11 +494,12 @@
 	}
 
 	.btn-cancel {
-		background: transparent;
+		background: var(--color-bg);
 		color: var(--color-text);
 	}
 
 	.btn-cancel:hover {
-		background: var(--color-bg-alt, #f5f5f5);
+		border-style: dotted;
+		border-color: var(--color-text);
 	}
 </style>
