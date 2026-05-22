@@ -47,14 +47,12 @@ export async function load({ locals, params }) {
 	const [project] = await db
 		.select()
 		.from(projects)
-		.where(
-			locals.isReviewer
-				? eq(projects.id, id)
-				: and(eq(projects.id, id), eq(projects.userId, dbUser.id))
-		)
+		.where(eq(projects.id, id))
 		.limit(1);
 
-	if (!project) error(404, 'project not found');
+	if (!project || (!locals.isReviewer && project.userId !== dbUser.id)) {
+		redirect(302, '/projects?error=not_found');
+	}
 
 	return { project, isReviewer: locals.isReviewer, isOwnProject: project.userId === dbUser.id };
 }

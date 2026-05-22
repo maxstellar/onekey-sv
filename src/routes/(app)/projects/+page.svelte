@@ -1,7 +1,19 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import { page } from '$app/state';
 
 	let { data, form } = $props();
+
+	const clockSvg = `<svg fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="1.414" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" preserveAspectRatio="xMidYMid meet" fill="currentColor" stroke="currentColor" stroke-width="1.5" paint-order="stroke fill"><path d="M26 16c0 5.523-4.477 10-10 10S6 21.523 6 16 10.477 6 16 6s10 4.477 10 10zm2 0c0 6.627-5.373 12-12 12S4 22.627 4 16 9.373 4 16 4s12 5.373 12 12z"/><path d="M15.64 17a1 1 0 0 1-1-1V9a1 1 0 0 1 2 0v7a1 1 0 0 1-1 1z"/><path d="M21.702 19.502a1 1 0 0 1-1.366.366l-5.196-3a1 1 0 0 1 1-1.732l5.196 3a1 1 0 0 1 .366 1.366z"/></svg>`;
+
+	let showErrorToast = $state(page.url.searchParams.get('error') === 'not_found');
+	let errorToastTimer: ReturnType<typeof setTimeout> | undefined;
+	$effect(() => {
+		if (showErrorToast) {
+			errorToastTimer = setTimeout(() => (showErrorToast = false), 3500);
+			return () => clearTimeout(errorToastTimer);
+		}
+	});
 
 	function formatHours(seconds: number) {
 		const h = Math.floor(seconds / 3600);
@@ -51,7 +63,7 @@
 			<div class="project-card-top">
 				<span class="project-name">{project.name}</span>
 				{#if project.totalSeconds > 0}
-					<span class="ht-time">{formatHours(project.totalSeconds)}</span>
+					<span class="ht-time"><span class="ht-icon">{@html clockSvg}</span>{formatHours(project.totalSeconds)}</span>
 				{/if}
 			</div>
 			{#if project.description}
@@ -65,6 +77,13 @@
 		<span class="new-label">new project</span>
 	</button>
 </div>
+
+{#if showErrorToast}
+	<div class="toast toast-error" role="alert">
+		this project doesn't exist!
+		<button class="toast-close" onclick={() => { showErrorToast = false; clearTimeout(errorToastTimer); }}>✕</button>
+	</div>
+{/if}
 
 {#if creating}
 	<div
@@ -189,16 +208,31 @@
 	}
 
 	.ht-time {
-		font-size: 1.1rem;
+		font-size: 1.3rem;
 		font-weight: bold;
 		letter-spacing: -0.02em;
 		color: var(--color-text-soft);
 		flex-shrink: 0;
+		display: flex;
+		align-items: center;
+		gap: 0.3rem;
+	}
+
+	.ht-icon {
+		display: flex;
+		width: 1em;
+		height: 1em;
+		flex-shrink: 0;
+	}
+
+	.ht-icon :global(svg) {
+		width: 100%;
+		height: 100%;
 	}
 
 	.project-name {
 		font-weight: bold;
-		font-size: 1.4rem;
+		font-size: 1.6rem;
 	}
 
 	.project-desc {
@@ -406,6 +440,43 @@
 
 	.req {
 		color: #c96a6a;
+	}
+
+	.toast {
+		position: fixed;
+		top: clamp(0.75rem, 2vw, 1.5rem);
+		left: 50%;
+		transform: translateX(-50%);
+		z-index: 100;
+		font-size: clamp(0.75rem, 1.2vw, 1rem);
+		padding: clamp(0.4rem, 0.8vw, 0.7rem) clamp(0.75rem, 1.2vw, 1.25rem);
+		border-radius: 9999px;
+		display: flex;
+		align-items: center;
+		gap: clamp(0.5rem, 0.8vw, 0.75rem);
+		white-space: nowrap;
+		box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+	}
+
+	.toast-error {
+		background: #3a1a1a;
+		color: #c96a6a;
+	}
+
+	.toast-close {
+		background: none;
+		border: none;
+		color: inherit;
+		font-size: 0.75rem;
+		padding: 0;
+		cursor: pointer;
+		opacity: 0.6;
+		line-height: 1;
+		font-family: inherit;
+	}
+
+	.toast-close:hover {
+		opacity: 1;
 	}
 
 	.url-disclaimer {

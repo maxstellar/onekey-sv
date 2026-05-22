@@ -28,6 +28,8 @@
 
 	const userApprovedSeconds = $derived(page.data.userApprovedSeconds ?? 0);
 
+	const clockSvg = `<svg fill-rule="evenodd" clip-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="1.414" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" preserveAspectRatio="xMidYMid meet" fill="currentColor" stroke="currentColor" stroke-width="1.5" paint-order="stroke fill"><path d="M26 16c0 5.523-4.477 10-10 10S6 21.523 6 16 10.477 6 16 6s10 4.477 10 10zm2 0c0 6.627-5.373 12-12 12S4 22.627 4 16 9.373 4 16 4s12 5.373 12 12z"/><path d="M15.64 17a1 1 0 0 1-1-1V9a1 1 0 0 1 2 0v7a1 1 0 0 1-1 1z"/><path d="M21.702 19.502a1 1 0 0 1-1.366.366l-5.196-3a1 1 0 0 1 1-1.732l5.196 3a1 1 0 0 1 .366 1.366z"/></svg>`;
+
 	function formatHours(seconds: number) {
 		return `${(seconds / 3600).toFixed(1)}h`;
 	}
@@ -87,7 +89,7 @@
 
 	<div class="bottom">
 		<div class="divider"></div>
-		<div class="hours-label">{formatHours(userApprovedSeconds)}</div>
+		<div class="hours-label"><span class="clock-icon">{@html clockSvg}</span>{formatHours(userApprovedSeconds)}</div>
 		<a href="/account" class="avatar" aria-label="account" draggable="false">
 			{#if page.data.user?.avatar_url}
 				<img src={page.data.user.avatar_url} alt="avatar" draggable="false" />
@@ -215,6 +217,22 @@
 		color: white;
 		letter-spacing: 0.04em;
 		text-align: center;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 0.3em;
+	}
+
+	.clock-icon {
+		display: flex;
+		width: 1em;
+		height: 1em;
+		flex-shrink: 0;
+	}
+
+	.clock-icon :global(svg) {
+		width: 100%;
+		height: 100%;
 	}
 
 	.avatar {
