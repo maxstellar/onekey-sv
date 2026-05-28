@@ -68,10 +68,13 @@
 				{#each cat.items as item (item.id)}
 					{@const canAfford = data.availableSeconds >= item.priceSeconds}
 					{@const outOfStock = item.stock === 0}
-					<!-- svelte-ignore a11y_click_events_have_key_events a11y_no_static_element_interactions -->
 					<div
 						class="item-card"
+						role="button"
+						tabindex={canAfford && !outOfStock ? 0 : -1}
+						aria-disabled={!canAfford || outOfStock}
 						onclick={() => canAfford && !outOfStock && openModal(item)}
+						onkeydown={(e) => (e.key === 'Enter' || e.key === ' ') && canAfford && !outOfStock && openModal(item)}
 					>
 						<div class="item-img-wrap">
 							{#if item.imageUrl}
@@ -363,11 +366,7 @@
 		font-weight: 600;
 	}
 
-	.oos-badge {
-		font-size: 0.85rem;
-		color: var(--color-text-soft);
-		font-style: italic;
-	}
+
 
 	.btn-order {
 		font-size: 0.9rem;
