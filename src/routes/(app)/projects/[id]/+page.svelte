@@ -209,7 +209,7 @@
 </div>
 
 <div class="bento">
-	<div class="card card-wide" class:card-full={!isDraft}>
+	<div class="card card-wide" class:card-full={!isDraft && !canReship}>
 		{#if derivedStatus}
 			<div class="card-header">
 				<span class="status-badge status-{derivedStatus}">{derivedStatus}</span>
