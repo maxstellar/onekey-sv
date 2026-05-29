@@ -40,6 +40,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 				ysws_eligible: u.yswsEligible ?? undefined,
 				hackatime_linked: !!(u.hackatimeTokenCt && u.hackatimeTokenIv && u.hackatimeTokenTag),
 				street_address: u.streetAddress ?? undefined,
+				address_line_2: u.addressLine2 ?? undefined,
 				locality: u.locality ?? undefined,
 				region: u.region ?? undefined,
 				postal_code: u.postalCode ?? undefined,

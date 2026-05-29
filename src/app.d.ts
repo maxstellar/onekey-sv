@@ -16,6 +16,7 @@ declare global {
 				ysws_eligible?: boolean;
 				hackatime_linked: boolean;
 				street_address?: string;
+				address_line_2?: string;
 				locality?: string;
 				region?: string;
 				postal_code?: string;

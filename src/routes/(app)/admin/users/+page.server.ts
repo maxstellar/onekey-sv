@@ -17,6 +17,7 @@ export async function load() {
 			verificationStatus: users.verificationStatus,
 			yswsEligible: users.yswsEligible,
 			streetAddress: users.streetAddress,
+			addressLine2: users.addressLine2,
 			locality: users.locality,
 			region: users.region,
 			postalCode: users.postalCode,

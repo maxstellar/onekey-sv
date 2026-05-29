@@ -73,9 +73,10 @@
 						<dt>slack display name</dt><dd>{user.slackDisplayName ?? '—'}</dd>
 						<dt>verification status</dt><dd>{user.verificationStatus ?? '—'}</dd>
 						<dt>ysws eligible</dt><dd>{bool(user.yswsEligible)}</dd>
-						<dt>street</dt><dd>{user.streetAddress ?? '—'}</dd>
+						<dt>address 1</dt><dd>{user.streetAddress ?? '—'}</dd>
+						<dt>address 2</dt><dd>{user.addressLine2 ?? '—'}</dd>
 						<dt>city</dt><dd>{user.locality ?? '—'}</dd>
-						<dt>region</dt><dd>{user.region ?? '—'}</dd>
+						<dt>state / province</dt><dd>{user.region ?? '—'}</dd>
 						<dt>postal</dt><dd>{user.postalCode ?? '—'}</dd>
 						<dt>country</dt><dd>{user.country ?? '—'}</dd>
 						<dt>joined</dt><dd>{fmt(user.createdAt)}</dd>

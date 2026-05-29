@@ -16,6 +16,7 @@ export const actions = {
 			.update(users)
 			.set({
 				streetAddress: (form.get('street_address') as string)?.trim() || null,
+				addressLine2: (form.get('address_line_2') as string)?.trim() || null,
 				locality: (form.get('locality') as string)?.trim() || null,
 				region: (form.get('region') as string)?.trim() || null,
 				postalCode: (form.get('postal_code') as string)?.trim() || null,

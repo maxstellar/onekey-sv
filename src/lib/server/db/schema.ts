@@ -27,6 +27,7 @@ export const users = pgTable('users', {
 	hackatimeTokenIv: text('hackatime_token_iv'),
 	hackatimeTokenTag: text('hackatime_token_tag'),
 	streetAddress: text('street_address'),
+	addressLine2: text('address_line_2'),
 	locality: text('locality'),
 	region: text('region'),
 	postalCode: text('postal_code'),

@@ -16,6 +16,7 @@
 	const hasAddress = $derived(
 		!!(
 			data.user?.street_address ||
+			data.user?.address_line_2 ||
 			data.user?.locality ||
 			data.user?.region ||
 			data.user?.postal_code ||
@@ -150,13 +151,23 @@
 			>
 				<div class="edit-grid">
 					<label class="edit-field edit-field-full">
-						<span class="edit-field-label">street</span>
+						<span class="edit-field-label">address line 1</span>
 						<input
 							class="edit-input"
 							type="text"
 							name="street_address"
 							value={data.user?.street_address ?? ''}
 							placeholder="212 Battery St"
+						/>
+					</label>
+					<label class="edit-field edit-field-full">
+						<span class="edit-field-label">address line 2 (optional)</span>
+						<input
+							class="edit-input"
+							type="text"
+							name="address_line_2"
+							value={data.user?.address_line_2 ?? ''}
+							placeholder="Unit 3"
 						/>
 					</label>
 					<label class="edit-field">
@@ -170,7 +181,7 @@
 						/>
 					</label>
 					<label class="edit-field">
-						<span class="edit-field-label">region</span>
+						<span class="edit-field-label">state / province</span>
 						<input
 							class="edit-input"
 							type="text"
@@ -211,8 +222,14 @@
 			<div class="field-list">
 				{#if data.user?.street_address}
 					<div class="field">
-						<span class="field-key">street</span>
+						<span class="field-key">address 1</span>
 						<span class="field-val">{data.user.street_address}</span>
+					</div>
+				{/if}
+				{#if data.user?.address_line_2}
+					<div class="field">
+						<span class="field-key">address 2</span>
+						<span class="field-val">{data.user.address_line_2}</span>
 					</div>
 				{/if}
 				{#if data.user?.locality}
@@ -223,7 +240,7 @@
 				{/if}
 				{#if data.user?.region}
 					<div class="field">
-						<span class="field-key">region</span>
+						<span class="field-key">state</span>
 						<span class="field-val">{data.user.region}</span>
 					</div>
 				{/if}
@@ -241,7 +258,10 @@
 				{/if}
 			</div>
 		{:else}
-			<p class="no-address">no address set yet</p>
+			<p class="no-address">
+				no address set yet.
+				<button class="no-address-cta" onclick={() => (editingAddress = true)}>add one</button>
+			</p>
 		{/if}
 	</div>
 </div>
@@ -456,9 +476,24 @@
 	}
 
 	.no-address {
-		font-size: 0.85rem;
+		font-size: 0.95rem;
 		color: var(--rail-label);
 		margin: 0;
+	}
+
+	.no-address-cta {
+		font-size: 0.95rem;
+		color: var(--rail-label);
+		background: none;
+		border: none;
+		cursor: pointer;
+		padding: 0;
+		font-family: inherit;
+		text-decoration: underline;
+	}
+
+	.no-address-cta:hover {
+		text-decoration-style: dotted;
 	}
 
 	.field-list {
