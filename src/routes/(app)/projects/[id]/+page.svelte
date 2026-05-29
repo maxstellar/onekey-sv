@@ -17,7 +17,11 @@
 		reviewAction === 'approve' ? 'approve' : reviewAction === 'reject' ? 'reject' : 'post comment'
 	);
 	const reviewActionClass = $derived(
-		reviewAction === 'approve' ? 'btn-approve' : reviewAction === 'reject' ? 'btn-reject' : 'btn-save'
+		reviewAction === 'approve'
+			? 'btn-approve'
+			: reviewAction === 'reject'
+				? 'btn-reject'
+				: 'btn-save'
 	);
 
 	const canReship = $derived(
@@ -27,7 +31,9 @@
 	const canEdit = $derived(isDraft || canReship);
 
 	let approvedHoursInput = $state(
-		data.latestApproval ? (Math.ceil((data.latestApproval.newSeconds / 3600) * 100) / 100).toFixed(2) : ''
+		data.latestApproval
+			? (Math.ceil((data.latestApproval.newSeconds / 3600) * 100) / 100).toFixed(2)
+			: ''
 	);
 	const approvedHoursConverted = $derived(() => {
 		const h = parseFloat(approvedHoursInput);
@@ -49,9 +55,9 @@
 	}
 
 	const CHECKLIST_ITEMS = [
-		'My project is open-source and its repository is publicly cloneable with clean commits',
-		'I have a detailed README.md that was not written by an AI',
-		'My project is experienceable without needing to build it from source'
+		'my project is open-source and has clean, frequent commits',
+		'my project has a detailed README.md that was not written by an AI',
+		'my project is experienceable without needing to build it from source'
 	];
 
 	let showCheckModal = $state(false);
@@ -63,7 +69,7 @@
 	let saveFormAiInput = $state<HTMLInputElement | null>(null);
 	let reshipAiInput = $state<HTMLInputElement | null>(null);
 
-	const allChecked = $derived(modalChecks.every(Boolean) && modalAiDeclaration.trim().length > 0);
+	const allChecked = $derived(modalChecks.every(Boolean));
 
 	function openCheckModal(action: 'submit' | 'reship') {
 		modalChecks = [false, false, false];
@@ -89,7 +95,13 @@
 
 	function formatDate(d: Date | string) {
 		const date = new Date(d);
-		return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+		return date.toLocaleDateString('en-US', {
+			month: 'short',
+			day: 'numeric',
+			year: 'numeric',
+			hour: '2-digit',
+			minute: '2-digit'
+		});
 	}
 
 	let screenshotPreview = $state('');
@@ -106,7 +118,10 @@
 	let selectedHtProjects = $state<string[]>([]);
 
 	$effect(() => {
-		selectedHtProjects = (project.hackatimeProject ?? '').split(',').map((s: string) => s.trim()).filter(Boolean);
+		selectedHtProjects = (project.hackatimeProject ?? '')
+			.split(',')
+			.map((s: string) => s.trim())
+			.filter(Boolean);
 	});
 
 	$effect(() => {
@@ -116,7 +131,8 @@
 	const htValue = $derived(selectedHtProjects.join(', '));
 
 	function addHtProject(name: string) {
-		if (!name || selectedHtProjects.includes(name) || selectedHtProjects.length >= MAX_HT_PROJECTS) return;
+		if (!name || selectedHtProjects.includes(name) || selectedHtProjects.length >= MAX_HT_PROJECTS)
+			return;
 		selectedHtProjects = [...selectedHtProjects, name];
 	}
 
@@ -325,12 +341,19 @@
 							{#each selectedHtProjects as name, i (name)}
 								{@const seconds = hackatimeProjects.find((p) => p.name === name)?.totalSeconds ?? 0}
 								<span class="ht-pill">
-									{name}{#if seconds > 0}<span class="ht-pill-time"> · {formatHours(seconds)}</span>{/if}
-									<button type="button" class="ht-pill-remove" onclick={() => removeHtProject(i)}>×</button>
+									{name}{#if seconds > 0}<span class="ht-pill-time">
+											· {formatHours(seconds)}</span
+										>{/if}
+									<button type="button" class="ht-pill-remove" onclick={() => removeHtProject(i)}
+										>×</button
+									>
 								</span>
 							{/each}
 							{#if selectedHtProjects.length < MAX_HT_PROJECTS}
-								<details class="ht-dropdown" ontoggle={(e) => e.currentTarget.open && loadHackatimeProjects()}>
+								<details
+									class="ht-dropdown"
+									ontoggle={(e) => e.currentTarget.open && loadHackatimeProjects()}
+								>
 									<summary class="ht-add-btn">+ add project</summary>
 									<div class="ht-dropdown-list">
 										{#if hackatimeLoading}
@@ -344,8 +367,11 @@
 												<button
 													type="button"
 													class="ht-dropdown-item"
-													onclick={(e) => { addHtProject(hp.name); (e.currentTarget.closest('details') as HTMLDetailsElement).open = false; }}
-												>{hp.name} · {formatHours(hp.totalSeconds)}</button>
+													onclick={(e) => {
+														addHtProject(hp.name);
+														(e.currentTarget.closest('details') as HTMLDetailsElement).open = false;
+													}}>{hp.name} · {formatHours(hp.totalSeconds)}</button
+												>
 											{/each}
 										{/if}
 									</div>
@@ -358,7 +384,14 @@
 					<button type="submit" class="btn-save">save</button>
 				</div>
 				<input type="hidden" name="ai_declaration" bind:this={saveFormAiInput} />
-				<button type="submit" formaction="?/submit" style="display:none" aria-hidden="true" tabindex="-1" bind:this={actualSubmitBtnEl}></button>
+				<button
+					type="submit"
+					formaction="?/submit"
+					style="display:none"
+					aria-hidden="true"
+					tabindex="-1"
+					bind:this={actualSubmitBtnEl}
+				></button>
 			</form>
 		{:else}
 			<div class="field-list">
@@ -396,7 +429,10 @@
 					<div class="field">
 						<span class="field-key">hackatime</span>
 						<div class="field-val ht-pills-readonly">
-							{#each project.hackatimeProject.split(',').map((s) => s.trim()).filter(Boolean) as name (name)}
+							{#each project.hackatimeProject
+								.split(',')
+								.map((s) => s.trim())
+								.filter(Boolean) as name (name)}
 								<span class="ht-pill ht-pill-static">{name}</span>
 							{/each}
 						</div>
@@ -406,197 +442,245 @@
 		{/if}
 	</div>
 
-
 	{#if isDraft}
-	<div class="card card-right">
-		<span class="card-label">submit</span>
-		<p class="danger-desc">ready? submit your project for review.</p>
-		{#if form?.error && !form?.success}
-			<p class="form-error">{form.error}</p>
-		{/if}
-		<button type="button" class="btn-submit" onclick={() => openCheckModal('submit')}>submit for review</button>
-
-		<div class="danger-section has-top">
-			<span class="card-label">danger zone</span>
-			<p class="danger-desc">permanently delete this project - this cannot be undone.</p>
-			<form method="POST" action="?/delete" use:enhance>
-				<button type="submit" class="btn-delete">delete project</button>
-			</form>
-		</div>
-	</div>
-	{/if}
-
-	{#if canReship}
-	<div class="card card-right">
-		<span class="card-label">reship</span>
-		{#if data.availableSeconds >= 3600}
-			<p class="danger-desc">you have {formatHours(data.availableSeconds)} of new work to submit.</p>
+		<div class="card card-right">
+			<span class="card-label">submit</span>
+			<p class="danger-desc">ready? submit your project for review.</p>
 			{#if form?.error && !form?.success}
 				<p class="form-error">{form.error}</p>
 			{/if}
-			<form method="POST" action="?/reship" use:enhance bind:this={reshipFormEl}>
-				<input type="hidden" name="ai_declaration" bind:this={reshipAiInput} />
-				<button type="button" class="btn-submit" onclick={() => openCheckModal('reship')}>ship again</button>
-			</form>
-		{:else}
-			<p class="danger-desc">keep working! you need at least 1 new hour since your last submission{data.availableSeconds > 0 ? ` (you have ${formatHours(data.availableSeconds)})` : ''}.</p>
-		{/if}
-	</div>
+			<button type="button" class="btn-submit" onclick={() => openCheckModal('submit')}
+				>submit for review</button
+			>
+
+			<div class="danger-section has-top">
+				<span class="card-label">danger zone</span>
+				<p class="danger-desc">permanently delete this project - this cannot be undone.</p>
+				<form method="POST" action="?/delete" use:enhance>
+					<button type="submit" class="btn-delete">delete project</button>
+				</form>
+			</div>
+		</div>
+	{/if}
+
+	{#if canReship}
+		<div class="card card-right">
+			<span class="card-label">reship</span>
+			{#if data.availableSeconds >= 3600}
+				<p class="danger-desc">
+					you have {formatHours(data.availableSeconds)} of new work to submit.
+				</p>
+				{#if form?.error && !form?.success}
+					<p class="form-error">{form.error}</p>
+				{/if}
+				<form method="POST" action="?/reship" use:enhance bind:this={reshipFormEl}>
+					<input type="hidden" name="ai_declaration" bind:this={reshipAiInput} />
+					<button type="button" class="btn-submit" onclick={() => openCheckModal('reship')}
+						>ship again</button
+					>
+				</form>
+			{:else}
+				<p class="danger-desc">
+					keep working! you need at least 1 new hour since your last submission{data.availableSeconds >
+					0
+						? ` (you have ${formatHours(data.availableSeconds)})`
+						: ''}.
+				</p>
+			{/if}
+		</div>
 	{/if}
 </div>
 
 {#if data.approvals.length > 0 || data.events.length > 0 || isReviewerOrAdmin}
-<div class="history">
-	<h2 class="history-title">history</h2>
+	<div class="history">
+		<h2 class="history-title">history</h2>
 
-	{#if data.approvals.length > 0 || data.events.length > 0}
-	{@const allEvents = [
-		...data.approvals.map(a => ({
-			id: `approval-${a.id}`,
-			type: 'approval' as const,
-			action: a.status === 'pending' ? 'submitted' : a.status,
-			time: a.status === 'pending' ? a.submittedAt : (a.reviewedAt ?? a.submittedAt),
-			actorAvatar: a.reviewerAvatar,
-			actorName: a.reviewerName,
-			actorNickname: a.reviewerNickname,
-			message: a.publicMessage,
-			internalNote: a.internalNote,
-			submittedSeconds: a.submittedSeconds,
-			newSeconds: a.newSeconds,
-			approvedSeconds: a.approvedSeconds,
-			isSubmission: a.status === 'pending'
-		})),
-		...data.events.map(e => ({
-			id: `event-${e.id}`,
-			type: 'comment' as const,
-			action: e.action,
-			time: e.createdAt,
-			actorAvatar: e.actorAvatar,
-			actorName: e.actorName,
-			actorNickname: e.actorNickname,
-			message: e.message,
-			internalNote: e.internalNote,
-			submittedSeconds: null,
-			newSeconds: null,
-			approvedSeconds: null,
-			isSubmission: false
-		}))
-	].sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime())
-	 .filter(e => e.action !== 'comment' || isReviewerOrAdmin)}
-	<div class="event-list">
-		{#each allEvents as event (event.id)}
-		<div class="event">
-			<div class="event-meta">
-				{#if event.actorAvatar}
-					<img class="event-avatar" src={event.actorAvatar} alt="" />
-				{:else}
-					<div class="event-avatar event-avatar-placeholder"></div>
-				{/if}
-				{#if event.isSubmission}
-					<span class="event-actor">you</span>
-				{:else}
-					<span class="event-actor">{event.actorNickname ?? event.actorName ?? 'reviewer'}</span>
-				{/if}
-				<span class="event-action event-action-{event.action}">{event.action}</span>
-				{#if event.isSubmission && event.newSeconds}
-					<span class="event-hours">{formatHours(event.newSeconds)} submitted</span>
-				{:else if event.action === 'approved' && event.approvedSeconds}
-					<span class="event-hours">{event.newSeconds && event.approvedSeconds < event.newSeconds ? `${formatHours(event.approvedSeconds)} of ${formatHours(event.newSeconds)}` : formatHours(event.approvedSeconds)} approved</span>
-				{/if}
-				<span class="event-time">{formatDate(event.time)}</span>
+		{#if data.approvals.length > 0 || data.events.length > 0}
+			{@const allEvents = [
+				...data.approvals.map((a) => ({
+					id: `approval-${a.id}`,
+					type: 'approval' as const,
+					action: a.status === 'pending' ? 'submitted' : a.status,
+					time: a.status === 'pending' ? a.submittedAt : (a.reviewedAt ?? a.submittedAt),
+					actorAvatar: a.reviewerAvatar,
+					actorName: a.reviewerName,
+					actorNickname: a.reviewerNickname,
+					message: a.publicMessage,
+					internalNote: a.internalNote,
+					submittedSeconds: a.submittedSeconds,
+					newSeconds: a.newSeconds,
+					approvedSeconds: a.approvedSeconds,
+					isSubmission: a.status === 'pending'
+				})),
+				...data.events.map((e) => ({
+					id: `event-${e.id}`,
+					type: 'comment' as const,
+					action: e.action,
+					time: e.createdAt,
+					actorAvatar: e.actorAvatar,
+					actorName: e.actorName,
+					actorNickname: e.actorNickname,
+					message: e.message,
+					internalNote: e.internalNote,
+					submittedSeconds: null,
+					newSeconds: null,
+					approvedSeconds: null,
+					isSubmission: false
+				}))
+			]
+				.sort((a, b) => new Date(a.time).getTime() - new Date(b.time).getTime())
+				.filter((e) => e.action !== 'comment' || isReviewerOrAdmin)}
+			<div class="event-list">
+				{#each allEvents as event (event.id)}
+					<div class="event">
+						<div class="event-meta">
+							{#if event.actorAvatar}
+								<img class="event-avatar" src={event.actorAvatar} alt="" />
+							{:else}
+								<div class="event-avatar event-avatar-placeholder"></div>
+							{/if}
+							{#if event.isSubmission}
+								<span class="event-actor">you</span>
+							{:else}
+								<span class="event-actor"
+									>{event.actorNickname ?? event.actorName ?? 'reviewer'}</span
+								>
+							{/if}
+							<span class="event-action event-action-{event.action}">{event.action}</span>
+							{#if event.isSubmission && event.newSeconds}
+								<span class="event-hours">{formatHours(event.newSeconds)} submitted</span>
+							{:else if event.action === 'approved' && event.approvedSeconds}
+								<span class="event-hours"
+									>{event.newSeconds && event.approvedSeconds < event.newSeconds
+										? `${formatHours(event.approvedSeconds)} of ${formatHours(event.newSeconds)}`
+										: formatHours(event.approvedSeconds)} approved</span
+								>
+							{/if}
+							<span class="event-time">{formatDate(event.time)}</span>
+						</div>
+						{#if event.message}
+							<p class="event-message">{event.message}</p>
+						{/if}
+						{#if event.internalNote && isReviewerOrAdmin}
+							<p class="event-internal">
+								<span class="event-internal-label">internal</span>{event.internalNote}
+							</p>
+						{/if}
+					</div>
+				{/each}
 			</div>
-			{#if event.message}
-				<p class="event-message">{event.message}</p>
-			{/if}
-			{#if event.internalNote && isReviewerOrAdmin}
-				<p class="event-internal"><span class="event-internal-label">internal</span>{event.internalNote}</p>
-			{/if}
-		</div>
-		{/each}
-	</div>
-	{/if}
-
-	{#if isReviewerOrAdmin}
-	<form method="POST" action={reviewFormAction} use:enhance class="comment-form">
-		<div class="review-action-row">
-			<span class="card-label">action</span>
-			<select bind:value={reviewAction} class="review-select">
-				<option value="comment">comment</option>
-				{#if derivedStatus === 'pending'}
-					{#if !data.isOwnProject}
-						<option value="approve">approve</option>
-					{/if}
-					<option value="reject">reject</option>
-				{/if}
-			</select>
-		</div>
-		{#if reviewAction === 'approve'}
-			<label class="review-hours-label">
-				<span class="review-hours-text">hours to approve</span>
-				<input
-					type="number"
-					name="approved_hours"
-					class="review-input"
-					min="0.01"
-					max={data.latestApproval ? Math.ceil((data.latestApproval.newSeconds / 3600) * 100) / 100 : undefined}
-					bind:value={approvedHoursInput}
-					step="0.01"
-					required
-				/>
-				<span class="review-hours-hint">
-					{#if approvedHoursConverted()}
-						= {approvedHoursConverted()} ·
-					{/if}
-					submitted: {data.latestApproval ? formatHours(data.latestApproval.newSeconds) : '—'}
-				</span>
-			</label>
-			<textarea class="review-textarea" name="message" placeholder="message to author" required></textarea>
-			<textarea class="review-textarea" name="internal_note" placeholder="internal note (reviewer-only)" required></textarea>
-		{:else if reviewAction === 'reject'}
-			<textarea class="review-textarea" name="message" placeholder="message to author" required></textarea>
-			<textarea class="review-textarea" name="internal_note" placeholder="internal note (reviewer-only)" required></textarea>
-		{:else}
-			<textarea class="review-textarea" name="internal_note" placeholder="internal note"></textarea>
 		{/if}
-		<button type="submit" class={reviewActionClass}>{reviewActionLabel}</button>
-	</form>
-	{/if}
-</div>
+
+		{#if isReviewerOrAdmin}
+			<form method="POST" action={reviewFormAction} use:enhance class="comment-form">
+				<div class="review-action-row">
+					<span class="card-label">action</span>
+					<select bind:value={reviewAction} class="review-select">
+						<option value="comment">comment</option>
+						{#if derivedStatus === 'pending'}
+							{#if !data.isOwnProject}
+								<option value="approve">approve</option>
+							{/if}
+							<option value="reject">reject</option>
+						{/if}
+					</select>
+				</div>
+				{#if reviewAction === 'approve'}
+					<label class="review-hours-label">
+						<span class="review-hours-text">hours to approve</span>
+						<input
+							type="number"
+							name="approved_hours"
+							class="review-input"
+							min="0.01"
+							max={data.latestApproval
+								? Math.ceil((data.latestApproval.newSeconds / 3600) * 100) / 100
+								: undefined}
+							bind:value={approvedHoursInput}
+							step="0.01"
+							required
+						/>
+						<span class="review-hours-hint">
+							{#if approvedHoursConverted()}
+								= {approvedHoursConverted()} ·
+							{/if}
+							submitted: {data.latestApproval ? formatHours(data.latestApproval.newSeconds) : '—'}
+						</span>
+					</label>
+					<textarea class="review-textarea" name="message" placeholder="message to author" required
+					></textarea>
+					<textarea
+						class="review-textarea"
+						name="internal_note"
+						placeholder="internal note (reviewer-only)"
+						required
+					></textarea>
+				{:else if reviewAction === 'reject'}
+					<textarea class="review-textarea" name="message" placeholder="message to author" required
+					></textarea>
+					<textarea
+						class="review-textarea"
+						name="internal_note"
+						placeholder="internal note (reviewer-only)"
+						required
+					></textarea>
+				{:else}
+					<textarea class="review-textarea" name="internal_note" placeholder="internal note"
+					></textarea>
+				{/if}
+				<button type="submit" class={reviewActionClass}>{reviewActionLabel}</button>
+			</form>
+		{/if}
+	</div>
 {/if}
 
 {#if showCheckModal}
-<div class="modal-backdrop" role="dialog" aria-modal="true" aria-label="submission checklist">
-	<div class="modal-box">
-		<h2 class="modal-title">before you {checkModalAction === 'submit' ? 'submit' : 'reship'}</h2>
-		<p class="modal-desc">please confirm the following:</p>
-		<div class="checklist">
-			{#each CHECKLIST_ITEMS as item, i (i)}
-			<label class="check-item" class:checked={modalChecks[i]}>
-				<input type="checkbox" bind:checked={modalChecks[i]} class="check-input" />
-				<span class="check-label">{item}</span>
+	<div class="modal-backdrop" role="dialog" aria-modal="true" aria-label="submission checklist">
+		<div class="modal-box">
+			<h2 class="modal-title">before you {checkModalAction === 'submit' ? 'submit' : 'reship'}</h2>
+			<p class="modal-desc">please confirm the following:</p>
+			<div class="checklist">
+				{#each CHECKLIST_ITEMS as item, i (i)}
+					<label class="check-item" class:checked={modalChecks[i]}>
+						<input type="checkbox" bind:checked={modalChecks[i]} class="check-input" />
+						<span class="check-box" aria-hidden="true">
+							<svg
+								class="check-svg"
+								viewBox="0 0 12 10"
+								fill="none"
+								stroke="currentColor"
+								stroke-width="2.2"
+								stroke-linecap="round"
+								stroke-linejoin="round"
+							>
+								<polyline class="check-mark" points="1.5,5 4.5,8 10.5,1" />
+							</svg>
+						</span>
+						<span class="check-label">{item}</span>
+					</label>
+				{/each}
+			</div>
+			<label class="ai-label">
+				<span class="ai-label-text">AI declaration</span>
+				<span class="ai-label-hint">explain if and how you used AI in building this project</span>
+				<textarea
+					class="ai-textarea"
+					placeholder="ex: i used copilot for autocomplete and chatgpt to help debug, but most of the code and design is by me."
+					bind:value={modalAiDeclaration}
+				></textarea>
 			</label>
-			{/each}
-		</div>
-		<label class="ai-label">
-			<span class="ai-label-text">AI declaration <span class="req">*</span></span>
-			<span class="ai-label-hint">explain if and how you used AI in building this project</span>
-			<textarea
-				class="ai-textarea"
-				placeholder="e.g. I used GitHub Copilot for autocomplete and ChatGPT to help debug a few issues, but all architecture and design decisions were made by me."
-				bind:value={modalAiDeclaration}
-			></textarea>
-		</label>
-		<div class="modal-actions">
-			<button type="button" class="btn-modal-cancel" onclick={closeCheckModal}>cancel</button>
-			<button
-				type="button"
-				class="btn-modal-confirm"
-				onclick={confirmCheckModal}
-				disabled={!allChecked}
-			>{checkModalAction === 'submit' ? 'submit for review' : 'ship again'}</button>
+			<div class="modal-actions">
+				<button type="button" class="btn-modal-cancel" onclick={closeCheckModal}>cancel</button>
+				<button
+					type="button"
+					class="btn-modal-confirm"
+					onclick={confirmCheckModal}
+					disabled={!allChecked}
+					>{checkModalAction === 'submit' ? 'submit for review' : 'ship again'}</button
+				>
+			</div>
 		</div>
 	</div>
-</div>
 {/if}
 
 {#if showToast}
@@ -1038,6 +1122,9 @@
 		background: var(--color-bg);
 		color: var(--color-text);
 		width: 100%;
+		transition:
+			0.3s color,
+			0.3s background-color;
 	}
 
 	.btn-submit:hover {
@@ -1273,10 +1360,22 @@
 		padding: 0.15em 0.5em;
 	}
 
-	.event-action-submitted { background: #1a2a3a; color: #6aaabf; }
-	.event-action-approved  { background: #1a2a1a; color: #6abf6a; }
-	.event-action-rejected  { background: #2a1a1a; color: #c96a6a; }
-	.event-action-comment   { background: #2a2620; color: #c9a84c; }
+	.event-action-submitted {
+		background: #1a2a3a;
+		color: #6aaabf;
+	}
+	.event-action-approved {
+		background: #1a2a1a;
+		color: #6abf6a;
+	}
+	.event-action-rejected {
+		background: #2a1a1a;
+		color: #c96a6a;
+	}
+	.event-action-comment {
+		background: #2a2620;
+		color: #c9a84c;
+	}
 
 	.event-time {
 		font-size: 0.75rem;
@@ -1413,13 +1512,20 @@
 
 	.check-item {
 		display: flex;
-		align-items: flex-start;
-		gap: 0.65rem;
+		align-items: center;
+		gap: 1rem;
 		padding: 0.75rem;
 		border: solid calc(var(--border-width) / 2);
 		border-radius: calc(var(--radius-card) / 1.5);
 		cursor: pointer;
-		transition: border-color 0.12s;
+		transition:
+			border-color 0.15s,
+			background 0.15s;
+	}
+
+	.check-item.checked {
+		border-color: color-mix(in srgb, var(--color-text) 40%, transparent);
+		background: color-mix(in srgb, var(--color-text) 6%, transparent);
 	}
 
 	.check-item.checked {
@@ -1427,12 +1533,56 @@
 	}
 
 	.check-input {
+		position: absolute;
+		opacity: 0;
+		width: 1px;
+		height: 1px;
+		margin: -1px;
+		pointer-events: none;
+	}
+
+	.check-box {
 		flex-shrink: 0;
-		margin-top: 0.15rem;
 		width: 1rem;
 		height: 1rem;
-		cursor: pointer;
-		accent-color: var(--color-text);
+		border: solid var(--border-width) color-mix(in srgb, var(--color-text) 35%, transparent);
+		border-radius: 5px;
+		background: transparent;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		color: var(--color-bg);
+		margin-top: 0;
+		transition:
+			background 0.15s,
+			border-color 0.15s,
+			transform 0.12s cubic-bezier(0.34, 1.56, 0.64, 1);
+	}
+
+	.check-item.checked .check-box {
+		background: var(--color-text);
+		border-color: var(--color-text);
+		transform: scale(1.08);
+	}
+
+	.check-input:focus-visible + .check-box {
+		outline: 2px solid var(--color-text);
+		outline-offset: 2px;
+	}
+
+	.check-svg {
+		width: 0.85rem;
+		height: 0.85rem;
+	}
+
+	.check-mark {
+		stroke-dasharray: 15;
+		stroke-dashoffset: 15;
+		transition: stroke-dashoffset 0.22s ease 0.06s;
+	}
+
+	.check-item.checked .check-mark {
+		stroke-dashoffset: 0;
 	}
 
 	.check-label {
@@ -1499,7 +1649,9 @@
 		font-family: inherit;
 		background: transparent;
 		color: var(--color-text-soft);
-		transition: color 0.1s, border-color 0.1s;
+		transition:
+			color 0.1s,
+			border-color 0.1s;
 	}
 
 	.btn-modal-cancel:hover {
