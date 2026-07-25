@@ -5,20 +5,22 @@
 	let { data } = $props();
 
 	let query = $state('');
+	let negativeOnly = $state(false);
 
 	const filtered = $derived(
-		query.trim() === ''
-			? data.users
-			: data.users.filter((u) => {
-					const q = query.toLowerCase();
-					return (
-						u.hcaId.toLowerCase().includes(q) ||
-						u.name?.toLowerCase().includes(q) ||
-						u.nickname?.toLowerCase().includes(q) ||
-						u.email?.toLowerCase().includes(q) ||
-						u.slackDisplayName?.toLowerCase().includes(q)
-					);
-				})
+		data.users
+			.filter((u) => {
+				if (query.trim() === '') return true;
+				const q = query.toLowerCase();
+				return (
+					u.hcaId.toLowerCase().includes(q) ||
+					u.name?.toLowerCase().includes(q) ||
+					u.nickname?.toLowerCase().includes(q) ||
+					u.email?.toLowerCase().includes(q) ||
+					u.slackDisplayName?.toLowerCase().includes(q)
+				);
+			})
+			.filter((u) => !negativeOnly || u.balanceSeconds < 0)
 	);
 
 	function fmt(date: Date | null) {
@@ -34,6 +36,10 @@
 	function adminName(adj: typeof data.adjustments[number]) {
 		return adj.adminName ?? adj.adminNickname ?? adj.adminRealName ?? 'admin';
 	}
+
+	function fmtBalance(seconds: number) {
+		return (seconds < 0 ? '−' : '') + formatHours(Math.abs(seconds));
+	}
 </script>
 
 
@@ -43,12 +49,18 @@
 		<h1>users <span class="count">({filtered.length}/{data.users.length})</span></h1>
 	</div>
 
-	<input
-		class="search"
-		type="search"
-		placeholder="search by name, email, slack, hca id…"
-		bind:value={query}
-	/>
+	<div class="filters">
+		<input
+			class="search"
+			type="search"
+			placeholder="search by name, email, slack, hca id…"
+			bind:value={query}
+		/>
+		<label class="negative-toggle">
+			<input type="checkbox" bind:checked={negativeOnly} />
+			negative balance only
+		</label>
+	</div>
 
 	<div class="list">
 		{#each filtered as user (user.id)}
@@ -61,6 +73,9 @@
 					{/if}
 					<span class="primary">{user.nickname ?? user.name ?? '(no name)'}</span>
 					<span class="secondary">{user.email ?? '—'}</span>
+					<span class="balance" class:balance-negative={user.balanceSeconds < 0}>
+						{fmtBalance(user.balanceSeconds)}
+					</span>
 					<span class="hca-id">{user.hcaId}</span>
 					<span class="joined">{fmt(user.createdAt)}</span>
 				</summary>
@@ -68,6 +83,8 @@
 				<div class="detail">
 					<dl>
 						<dt>id</dt><dd>{user.id}</dd>
+						<dt>balance</dt>
+						<dd class:balance-negative={user.balanceSeconds < 0}>{fmtBalance(user.balanceSeconds)}</dd>
 						<dt>hca id</dt><dd>{user.hcaId}</dd>
 						<dt>name</dt><dd>{user.name ?? '—'}</dd>
 						<dt>nickname</dt><dd>{user.nickname ?? '—'}</dd>
@@ -165,8 +182,14 @@
 		color: #8a8f99;
 	}
 
+	.filters {
+		display: flex;
+		align-items: center;
+		gap: 0.85rem;
+	}
+
 	.search {
-		width: 100%;
+		flex: 1;
 		box-sizing: border-box;
 		padding: 0.5rem 0.85rem;
 		font-family: 'Phantom Sans', sans-serif;
@@ -184,6 +207,33 @@
 
 	.search::placeholder {
 		color: #aaa;
+	}
+
+	.negative-toggle {
+		display: flex;
+		align-items: center;
+		gap: 0.4rem;
+		font-size: 0.82rem;
+		color: #8a8f99;
+		white-space: nowrap;
+		cursor: pointer;
+		user-select: none;
+	}
+
+	.negative-toggle input {
+		cursor: pointer;
+	}
+
+	.balance {
+		min-width: 90px;
+		font-family: monospace;
+		font-size: 0.8rem;
+		color: #cdd0d6;
+	}
+
+	.balance-negative {
+		color: #ef4444;
+		font-weight: 700;
 	}
 
 	.list {

@@ -4,37 +4,42 @@ import { users, balanceAdjustments } from '$lib/server/db/schema';
 import { eq, desc } from 'drizzle-orm';
 import { sendSlackDM } from '$lib/server/slack';
 import { formatHours } from '$lib/format';
-import { getAvailableSeconds } from '$lib/server/balance';
+import { getAvailableSeconds, getAllAvailableSeconds } from '$lib/server/balance';
 
 export async function load({ locals }) {
 	if (!locals.isAdmin) error(403, 'Forbidden');
 
-	const allUsers = await db
-		.select({
-			id: users.id,
-			hcaId: users.hcaId,
-			name: users.name,
-			nickname: users.nickname,
-			email: users.email,
-			emailVerified: users.emailVerified,
-			slackId: users.slackId,
-			slackAvatarUrl: users.slackAvatarUrl,
-			slackDisplayName: users.slackDisplayName,
-			verificationStatus: users.verificationStatus,
-			yswsEligible: users.yswsEligible,
-			yswsCheckResult: users.yswsCheckResult,
-			birthday: users.birthday,
-			streetAddress: users.streetAddress,
-			addressLine2: users.addressLine2,
-			locality: users.locality,
-			region: users.region,
-			postalCode: users.postalCode,
-			country: users.country,
-			createdAt: users.createdAt,
-			updatedAt: users.updatedAt
-		})
-		.from(users)
-		.orderBy(desc(users.createdAt));
+	const [userRows, balances] = await Promise.all([
+		db
+			.select({
+				id: users.id,
+				hcaId: users.hcaId,
+				name: users.name,
+				nickname: users.nickname,
+				email: users.email,
+				emailVerified: users.emailVerified,
+				slackId: users.slackId,
+				slackAvatarUrl: users.slackAvatarUrl,
+				slackDisplayName: users.slackDisplayName,
+				verificationStatus: users.verificationStatus,
+				yswsEligible: users.yswsEligible,
+				yswsCheckResult: users.yswsCheckResult,
+				birthday: users.birthday,
+				streetAddress: users.streetAddress,
+				addressLine2: users.addressLine2,
+				locality: users.locality,
+				region: users.region,
+				postalCode: users.postalCode,
+				country: users.country,
+				createdAt: users.createdAt,
+				updatedAt: users.updatedAt
+			})
+			.from(users)
+			.orderBy(desc(users.createdAt)),
+		getAllAvailableSeconds()
+	]);
+
+	const allUsers = userRows.map((u) => ({ ...u, balanceSeconds: balances.get(u.id) ?? 0 }));
 
 	const adminAlias = db.select({
 		id: users.id,
